@@ -3,26 +3,20 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
+@pytest.mark.usefixtures('driver')
 class TestIndex():
-  def setup_method(self, method):
-    self.driver = webdriver.Chrome()
-    self.vars = {}
   
-  def teardown_method(self, method):
-    self.driver.quit()
-  
-  def test_index(self):
-    self.driver.get("https://www.lambdatest.com/selenium-playground/input-form-demo")
-    #self.driver.set_window_size(1200, 763)
-    self.driver.find_element(By.NAME, "country").click()
-    country = 104
-    dropdown = self.driver.find_element(By.NAME, "country")
-    option = dropdown.find_element(By.XPATH, "//*[@id='seleniumform']//select/option[{}]".format(country))
+  def test_index(self, driver):
+    driver.get("https://www.lambdatest.com/selenium-playground/input-form-demo")
+    driver.find_element(By.NAME, "country").click()
+
+    country_index = 104
+    dropdown = driver.find_element(By.NAME, "country")
+    option = dropdown.find_element(By.XPATH, "//select[@name='country']/option[{}]".format(country_index))
     option.click()
 
     with open('country.txt', 'a') as f:
        f.write(" Selected country is : "+ option.text)
        f.write('\n')
 
-    #self.driver.execute_script("window.scrollTo(0,198)")
     time.sleep(10)
